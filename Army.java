@@ -12,7 +12,7 @@ public class Army {
 		for(int n=0;n<i;n++)
 			army.add(new Soldier());
 	}
-	public Army(String a){ //Reader that does not work
+	public Army(String a){
 		int[] stat = new int[6];
 		String name="";
 		int cnt=0;
@@ -25,7 +25,7 @@ public class Army {
 				a=a.substring(1);
 				stat[cnt]=Integer.parseInt(a.substring(0,a.indexOf("*")));
 				a=a.substring(a.substring(0,a.indexOf("*")).length());
-				cnt++;
+				cnt++;					
 			}
 			cnt=0;
 			a=a.substring(2);
@@ -33,10 +33,16 @@ public class Army {
 			stat=new int[6];
 		}
 	}
+	public Soldier getSoldier(int n){
+		return army.get(n);
+	}
 	public int getSize(){
 		return army.size();
 	}
-	public ArrayList<Soldier> get(){
+	public void dead(int n){
+		army.remove(n);
+	}
+	public ArrayList<Soldier> getArmy(){
 		return army;
 	}
 	public String toString(){
