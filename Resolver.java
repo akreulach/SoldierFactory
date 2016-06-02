@@ -21,15 +21,61 @@ import java.util.Scanner;
 public class Resolver {
 	static Scanner s = new Scanner(System.in);
 	static Army atck,defd;
+	static int size1,size2;
+	
 	public static void main(String[] args){
 		input();
 		begin();
 	}
 	public static void input(){
 		System.out.println("Battle begins! Who is the aggressor?");
-		atck = new Army(s.nextLine());
+		interpret(s.nextLine(),true);
+		size1=atck.getSize();
+		
 		System.out.println("And who are they attacking?");
-		defd = new Army(s.nextLine());
+		interpret(s.nextLine(),false);
+		size2=defd.getSize();
+	}
+	public static void interpret(String s, boolean a){
+		if(a){
+			if(s.contains("**"))
+				atck = new Army(s);
+			else if(s.equals("Greenskins"))
+				atck = new Army(0,"Greenskins");
+			else if(s.contains("Ogres")&&s.contains(" "))
+				atck = new Army(Integer.parseInt(s.substring(0,s.indexOf(" "))),"Ogre");
+			else if(s.contains("Ogres"))
+				atck = new Army(100,"Ogre");
+			else if(s.contains("Orcs")&&s.contains(" "))
+				atck = new Army(Integer.parseInt(s.substring(0,s.indexOf(" "))),"Orc");
+			else if(s.contains("Orcs"))
+				atck = new Army(100,"Orc");
+			else if(s.contains("Goblins")&&s.contains(" "))
+				atck = new Army(Integer.parseInt(s.substring(0,s.indexOf(" "))),"Goblin");
+			else if(s.contains("Goblins"))
+				atck = new Army(100,"Goblin");
+			else
+				atck = new Army();
+		}else{
+			if(s.contains("**"))
+				defd = new Army(s);
+			else if(s.equals("Greenskins"))
+				defd = new Army(0,"Greenskins");
+			else if(s.contains("Ogres")&&s.contains(" "))
+				defd = new Army(Integer.parseInt(s.substring(0,s.indexOf(" "))),"Ogre");
+			else if(s.contains("Ogres"))
+				defd = new Army(100,"Ogre");
+			else if(s.contains("Orcs")&&s.contains(" "))
+				defd = new Army(Integer.parseInt(s.substring(0,s.indexOf(" "))),"Orc");
+			else if(s.contains("Orcs"))
+				defd = new Army(100,"Orc");
+			else if(s.contains("Goblins")&&s.contains(" "))
+				defd = new Army(Integer.parseInt(s.substring(0,s.indexOf(" "))),"Goblin");
+			else if(s.contains("Goblins"))
+				defd = new Army(100,"Goblin");
+			else
+				defd = new Army();
+		}
 	}
 	public static void begin(){
 		alignment();
@@ -45,14 +91,14 @@ public class Resolver {
 		while(hasASoldier(defd)&&hasASoldier(atck)){
 			new SingleCombat(defd.getSoldier(dSold),atck.getSoldier(aSold));
 		
-			if(defd.getSoldier(dSold).HP<1){
+			if(defd.getSoldier(dSold).getHP()<1){
 				defd.dead(dSold);
 				if(atck.getSize()>aSold+1)
 					aSold++;
 				if(defd.getSize()<dSold+1)
 					dSold--;
 			}
-			if(atck.getSoldier(aSold).HP<1){
+			if(atck.getSoldier(aSold).getHP()<1){
 				atck.dead(aSold);			
 				if(defd.getSize()>dSold+1)
 					dSold++;
@@ -62,14 +108,26 @@ public class Resolver {
 		}
 	}
 	public static void score(){
-		if(hasASoldier(atck))
-			System.out.println("The attackers are victorious, but at what cost?");
-		else if(hasASoldier(defd))
-			System.out.println("The defenders have held the line, but at what cost?");
-		else
+		if(hasASoldier(atck)){
+			System.out.print("The attackers are victorious");
+			if(atck.getSize()*2<size1)
+				System.out.println(", but at what cost?");
+			else
+				System.out.println("! Glory to your name!");
+
+			System.out.println(atck);
+		}
+		else if(hasASoldier(defd)){
+			System.out.print("The defenders have held the line");
+			if(defd.getSize()*2<size2)
+				System.out.println(", but at what cost?");
+			else
+				System.out.println("! Glory to your name!");
+			System.out.println(defd);
+		}
+		else{
 			System.out.println("Only crows will feast tonight.");
-		System.out.println(atck);
-		System.out.println(defd);
+		}
 	}
 	
 	public static boolean hasASoldier(Army a){

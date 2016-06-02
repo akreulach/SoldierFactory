@@ -2,16 +2,53 @@ package baseCase;
 
 import java.util.ArrayList;
 
+import creatures.Creature;
+import creatures.Goblin;
+import creatures.Ogre;
+import creatures.Orc;
+import creatures.Soldier;
+
 public class Army {
-	ArrayList<Soldier> army = new ArrayList<Soldier>();
+	ArrayList<Creature> army = new ArrayList<Creature>();
 	public Army(){
 		for(int n=0;n<100;n++)
 			army.add(new Soldier());
 	}
-	public Army(int i){
-		for(int n=0;n<i;n++)
-			army.add(new Soldier());
+	//Constructor for randomly generated enemy armies, no need for 
+	//remembering names
+	public Army(int i,String a){
+		switch(a){
+			case("Soldier"):		
+				for(int n=0;n<i;n++)
+					army.add(new Soldier());
+				break;
+			case("Goblin"):
+				for(int n=0;n<i;n++)
+					army.add(new Goblin());
+				break;
+			case("Orc"):
+				for(int n=0;n<i;n++)
+					army.add(new Orc());
+				break;
+			case("Ogre"):
+				for(int n=0;n<i;n++)
+					army.add(new Ogre());
+				break;
+			case("Greenskins"):
+				for(int n=0;n<5;n++)
+					army.add(new Ogre());
+				for(int n=0;n<20;n++)
+					army.add(new Orc());
+				for(int n=0;n<75;n++)
+					army.add(new Goblin());
+				break;
+			default:
+				for(int n=0;n<i;n++)
+					army.add(new Soldier());
+				break;
+		}
 	}
+	//Constructor for player armies, allows for reloading "saved" armies
 	public Army(String a){
 		int[] stat = new int[6];
 		String name="";
@@ -33,7 +70,7 @@ public class Army {
 			stat=new int[6];
 		}
 	}
-	public Soldier getSoldier(int n){
+	public Creature getSoldier(int n){
 		return army.get(n);
 	}
 	public int getSize(){
@@ -42,14 +79,18 @@ public class Army {
 	public void dead(int n){
 		army.remove(n);
 	}
-	public ArrayList<Soldier> getArmy(){
+	public ArrayList<Creature> getArmy(){
 		return army;
+	}
+	public void reinforce(Creature c){
+		army.add(c);
 	}
 	public String toString(){
 		String res="";
 		char s='*';
 		for(int n=0;n<army.size();n++){
-			res+=army.get(n).name+s+army.get(n).stat[0]+s+army.get(n).stat[1]+s+army.get(n).stat[2]+s+army.get(n).stat[3]+s+army.get(n).stat[4]+s+army.get(n).stat[5]+s+s;
+			int[] st = army.get(n).getStats();
+			res+=army.get(n).getName()+s+st[0]+s+st[1]+s+st[2]+s+st[3]+s+st[4]+s+st[5]+s+s;
 		}
 		return res;
 	}
